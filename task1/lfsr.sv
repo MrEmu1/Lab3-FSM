@@ -5,4 +5,12 @@ module lfsr(
     output  logic [3:0] data_out
 );
 
+
+always_ff @ (posedge clk, posedge rst) begin
+    if (rst)
+        data_out <= 4'b0001;
+    else
+        data_out <= {data_out[2:0], data_out[3] ^ data_out[2]};
+end
+
 endmodule

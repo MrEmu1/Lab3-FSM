@@ -1,14 +1,18 @@
-module f1_fsm (
+module f1_fsm #(
+    parameter WIDTH = 16
+)(
     input   logic       rst,
     input   logic       en,
     input   logic       clk,
+    output   logic       tick,
+    input   logic [WIDTH-1:0] N,
     output  logic [7:0] data_out
 );
 
 typedef enum logic [7:0] {S0,S1,S2,S3,S4,S5,S6,S7,S8} my_state;
 my_state current_state, next_state;
 
-always_ff @ (posedge clk or posedge rst) begin
+always_ff @ (posedge tick or posedge rst) begin
     if (rst)
         current_state <= S0; // Reset state
     else if (en)
@@ -47,5 +51,13 @@ always_comb begin
 
     endcase
 end
+
+clktick delay(
+    .clk (clk),
+    .rst (rst),
+    .en (en),
+    .N (N),
+    .tick (tick)
+);
 
 endmodule
